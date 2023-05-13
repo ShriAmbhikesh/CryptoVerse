@@ -14,7 +14,7 @@ module.exports = {
         const videoUrl = interaction.options.getString('url');
         await interaction.reply("Download starting...");
 
-        const downloadPath = '/home/ambhi/Documents/projects/discord/CryptoVerse/cache/song.mp3';
+        const downloadPath = 'song.mp3';
 
         const fileStream = fs.createWriteStream(downloadPath);
         ytdl(videoUrl, { filter: 'audioonly' })
