@@ -5,7 +5,7 @@ const ytdl = require('ytdl-core');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('yt2mp3')
-        .setDescription('Download audio from YouTube')
+        .setDescription('Download audio from YouTube| Do not spam, i didnt keep a cooldown ☠')
         .addStringOption(option =>
             option.setName('url')
                 .setDescription('URL of the video')
@@ -14,14 +14,17 @@ module.exports = {
         const videoUrl = interaction.options.getString('url');
         await interaction.reply("Download starting...");
 
-        const downloadPath = 'song.mp3';
+        const info = await ytdl.getInfo(videoUrl);
+        const videoTitle = info.videoDetails.title;
+      
+        const downloadPath = `${videoTitle}.mp3`;
 
         const fileStream = fs.createWriteStream(downloadPath);
         ytdl(videoUrl, { filter: 'audioonly' })
             .pipe(fileStream);
 
         fileStream.on('finish', () => {
-            const attachment = new AttachmentBuilder(downloadPath, { name: 'song.mp3' });
+            const attachment = new AttachmentBuilder(downloadPath, { name: `${videoTitle}.mp3` });
             interaction.channel.send({ files: [attachment] })
                 .then(() => {
                     fs.unlink(downloadPath, (err) => {
@@ -29,10 +32,12 @@ module.exports = {
                             console.error('Failed to delete file:', err);
                         }
                     });
+
+                  interaction.editReply(`Downloaded ${videoTitle}.mp3`);
                 })
                 .catch(console.error);
         });
 
-        await interaction.editReply("Downloaded");
+       
     },
 };
