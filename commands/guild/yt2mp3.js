@@ -6,6 +6,7 @@ const path = require('path')
 const requestQueue = [];
 
 module.exports = {
+  cooldown:5,
   data: new SlashCommandBuilder()
     .setName('yt2mp3')
     .setDescription('Download audio from YouTube | Do not spam, I did not keep a cooldown ☠')
